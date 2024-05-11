@@ -2,10 +2,8 @@ import { FormGroup, FormControl, ReactiveFormsModule, FormBuilder, Validators } 
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; 
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -14,14 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule
+    CommonModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  errorMessage = "";
+
   loginForm = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
@@ -39,6 +37,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.errorMessage = "";
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       if (email && password) {
@@ -49,6 +48,11 @@ export class LoginComponent {
             this.router.navigate(['/home']); // Ajuste a rota conforme necessário
           },
           error: (error) => {
+            if (error.status === 401) {
+              this.errorMessage = "Invalid email or password";
+            } else {
+              this.errorMessage = "An error occurred. Please try again later.";
+            }
             console.error('Login failed', error);
           }
         });
