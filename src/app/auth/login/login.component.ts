@@ -36,16 +36,15 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  login() {
     this.errorMessage = "";
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       if (email && password) {
         this.authService.login(email, password).subscribe({
           next: (response) => {
-            // Aqui você pode armazenar o token JWT, se necessário
             console.log('Login successful', response);
-            this.router.navigate(['/home']); // Ajuste a rota conforme necessário
+            this.router.navigate(['/register']);
           },
           error: (error) => {
             if (error.status === 401) {
